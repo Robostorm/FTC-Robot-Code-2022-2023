@@ -51,8 +51,14 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
+
+/**
+ * Processes the computer vision for the robot
+ * @author Visvam Rajesh
+ * @since 2022-10-06
+ */
+
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-@Disabled
 public class RRBotTensorFlowObjectDetection extends LinearOpMode {
 
     /*
@@ -164,7 +170,7 @@ public class RRBotTensorFlowObjectDetection extends LinearOpMode {
                             }
                             else if(recognition.getLabel() == SLEEVE_LABELS[2])
                             {
-                                telemetry.addData("Sleeve Side: ", "[\u1f301]")
+                                telemetry.addData("Sleeve Side: ", "[\u1f301]");
                             }
                         }
                         telemetry.update();
