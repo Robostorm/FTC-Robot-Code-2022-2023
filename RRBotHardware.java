@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,6 +20,10 @@ public class RRBotHardware
     public DcMotor frontRightDrive = null;
     public DcMotor rearLeftDrive = null;
     public DcMotor rearRightDrive = null;
+    public CRServo frontLeftTurn = null;
+    public CRServo frontRightTurn = null;
+    public CRServo rearLeftTurn = null;
+    public CRServo rearRightTurn = null;
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -62,5 +67,24 @@ public class RRBotHardware
         frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //Define and Initialize Servos
+        frontLeftTurn = hwMap.get(CRServo.class, "front_left_turn");
+        frontRightTurn = hwMap.get(CRServo.class, "front_right_turn");
+        rearLeftTurn = hwMap.get(CRServo.class, "rear_left_turn");
+        rearRightTurn = hwMap.get(CRServo.class, "rear_right_turn");
+
+        frontLeftTurn.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightTurn.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRightTurn.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearLeftTurn.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        // Set servo power on init
+        frontLeftTurn.setPower(0);
+        frontRightTurn.setPower(0);
+        rearLeftTurn.setPower(0);
+        rearRightTurn.setPower(0);
+
+
     }
 }
