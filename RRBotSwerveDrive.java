@@ -27,6 +27,17 @@ public class RRBotSwerveDrive
     }
 
     /**
+     * Calculates the power of the motors for a swerve drive
+     * @param leftX X position of the left joystick
+     * @param leftY Y position of the left joystick
+     */
+    public double getPower(double leftX, double leftY)
+    {
+        //The drive power is the hypotenuse of the right triangle formed by leftX and leftY
+        return Math.sqrt(Math.pow(leftX, 2) + Math.pow(leftY, 2));
+    }
+
+    /**
      * Calculates the velocity values for the drive motors in a mecanum configuration.
      * @param leftX X position of left joystick
      * @param leftY Y position of left joystick
@@ -75,13 +86,34 @@ public class RRBotSwerveDrive
     public void setMotorPower(double leftX, double leftY, double rightX, double rightY)
     {
         //calculate the velocities
-        double[] velocities = calcVelocities(leftX, leftY, rightX, rightY);
+        //double[] velocities = calcVelocities(leftX, leftY, rightX, rightY);
+        double power = getPower(leftX, leftY);
 
         //set the motor power
-        robot.frontLeftDrive.setPower(velocities[0]);
-        robot.frontRightDrive.setPower(velocities[1]);
-        robot.rearLeftDrive.setPower(velocities[2]);
-        robot.rearRightDrive.setPower(velocities[3]);
+        robot.frontLeftDrive.setPower(power);
+        robot.frontRightDrive.setPower(power);
+        robot.rearLeftDrive.setPower(power);
+        robot.rearRightDrive.setPower(power);
+    }
+
+    /**
+     * Calculates the angle(in degrees) of the servos in a standard swerve drive
+     * @param leftX X position of left joystick
+     * @param leftY Y position of left joystick
+     */
+    public double getAngle(double leftX, double leftY)
+    {
+        //The angle is the inverse tangent of the right triangle formed by leftX and leftY
+        double radians = Math.atan(leftY / leftX);
+
+        return (radians * 180) / Math.PI;
+    }
+
+    public void setServoAngle(double leftX, double leftY)
+    {
+        double angle = getAngle(leftX, leftY);
+
+        //TODO: Write code to set servo position based on an angle in degrees
     }
 
     /**
