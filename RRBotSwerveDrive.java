@@ -16,6 +16,7 @@ public class RRBotSwerveDrive
 
     private boolean isAutoMove = false;
     private double autoTime;
+    private int encoderPos = 0; //TODO: Get Encoder Position
 
     /**
      * Constructor gets hardware object from teleop class
@@ -114,6 +115,52 @@ public class RRBotSwerveDrive
         double angle = getAngle(leftX, leftY);
 
         //TODO: Write code to set servo position based on an angle in degrees
+        int currentPos = 0; //TODO: Get encoder position
+
+        if(angle < 0)
+        {
+            if((angle * robot.ENCODER_TO_ANGLE) > (encoderPos * -1))
+            {
+                robot.frontRightTurn.setPower(-0.5);
+                robot.frontLeftTurn.setPower(-0.5);
+                robot.rearRightTurn.setPower(-0.5);
+                robot.rearLeftTurn.setPower(-0.5);
+            }else if((angle * robot.ENCODER_TO_ANGLE) < (encoderPos * -1))
+            {
+                robot.frontRightTurn.setPower(0);
+                robot.frontLeftTurn.setPower(0);
+                robot.rearRightTurn.setPower(0);
+                robot.rearLeftTurn.setPower(0);
+            }else
+            {
+                robot.frontRightTurn.setPower(0);
+                robot.frontLeftTurn.setPower(0);
+                robot.rearRightTurn.setPower(0);
+                robot.rearLeftTurn.setPower(0);
+            }
+        }else if(angle > 0)
+        {
+            if((angle * robot.ENCODER_TO_ANGLE) > encoderPos)
+            {
+                robot.frontRightTurn.setPower(-0.5);
+                robot.frontLeftTurn.setPower(-0.5);
+                robot.rearRightTurn.setPower(-0.5);
+                robot.rearLeftTurn.setPower(-0.5);
+            }else if((angle * robot.ENCODER_TO_ANGLE) < encoderPos)
+            {
+                robot.frontRightTurn.setPower(0);
+                robot.frontLeftTurn.setPower(0);
+                robot.rearRightTurn.setPower(0);
+                robot.rearLeftTurn.setPower(0);
+            }else
+            {
+                robot.frontRightTurn.setPower(0);
+                robot.frontLeftTurn.setPower(0);
+                robot.rearRightTurn.setPower(0);
+                robot.rearLeftTurn.setPower(0);
+            }
+        }
+
     }
 
     /**

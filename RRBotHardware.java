@@ -25,6 +25,8 @@ public class RRBotHardware
     public CRServo rearLeftTurn = null;
     public CRServo rearRightTurn = null;
 
+    public final int ENCODER_TO_ANGLE = 90; // TODO: Set actual value
+
     /* local OpMode members. */
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
