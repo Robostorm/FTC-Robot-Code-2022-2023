@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -17,6 +18,13 @@ public class RRBotSwerveDrive
     private boolean isAutoMove = false;
     private double autoTime;
     private int encoderPos = 0; //TODO: Get Encoder Position
+
+    /** Set the constants for the PID controller */
+    //TODO: Set constants to their proper values
+    private final double Kp = 0;
+    private final double Ki = 0;
+    private final double Kd = 0;
+    private final PIDCoefficients pidCoef = new PIDCoefficients(Kp, Ki, Kd);
 
     /**
      * Constructor gets hardware object from teleop class
@@ -91,6 +99,7 @@ public class RRBotSwerveDrive
         double power = getPower(leftX, leftY);
 
         //set the motor power
+
         robot.frontLeftDrive.setPower(power);
         robot.frontRightDrive.setPower(power);
         robot.rearLeftDrive.setPower(power);
@@ -112,53 +121,48 @@ public class RRBotSwerveDrive
 
     public void setServoAngle(double leftX, double leftY)
     {
-        double angle = getAngle(leftX, leftY);
+        // TODO: Reset encoder value or calculate difference
+        //  ex. servo.setPosition(0);
+
+        double angle = getAngle(leftX, leftY); // Goal Angle
+
+        int reference = (int) angle * robot.ENCODER_TO_ANGLE; // Goal Encoder Value
+
+        ElapsedTime pidTimer = new ElapsedTime(); // Elapsed Time of each iteration of the PID Control Loop
+
+        boolean hasNotReached = true; // Condition to escape PID Control Loop
+
+        // Values we will use through out the duration of the PID Control Loop
+        double integralSum = 0;
+        double lastError = 0;
 
         //TODO: Write code to set servo position based on an angle in degrees
-        int currentPos = 0; //TODO: Get encoder position
 
-        if(angle < 0)
+        while(hasNotReached)
         {
-            if((angle * robot.ENCODER_TO_ANGLE) > (encoderPos * -1))
-            {
-                robot.frontRightTurn.setPower(-0.5);
-                robot.frontLeftTurn.setPower(-0.5);
-                robot.rearRightTurn.setPower(-0.5);
-                robot.rearLeftTurn.setPower(-0.5);
-            }else if((angle * robot.ENCODER_TO_ANGLE) < (encoderPos * -1))
-            {
-                robot.frontRightTurn.setPower(0);
-                robot.frontLeftTurn.setPower(0);
-                robot.rearRightTurn.setPower(0);
-                robot.rearLeftTurn.setPower(0);
-            }else
-            {
-                robot.frontRightTurn.setPower(0);
-                robot.frontLeftTurn.setPower(0);
-                robot.rearRightTurn.setPower(0);
-                robot.rearLeftTurn.setPower(0);
-            }
-        }else if(angle > 0)
-        {
-            if((angle * robot.ENCODER_TO_ANGLE) > encoderPos)
-            {
-                robot.frontRightTurn.setPower(-0.5);
-                robot.frontLeftTurn.setPower(-0.5);
-                robot.rearRightTurn.setPower(-0.5);
-                robot.rearLeftTurn.setPower(-0.5);
-            }else if((angle * robot.ENCODER_TO_ANGLE) < encoderPos)
-            {
-                robot.frontRightTurn.setPower(0);
-                robot.frontLeftTurn.setPower(0);
-                robot.rearRightTurn.setPower(0);
-                robot.rearLeftTurn.setPower(0);
-            }else
-            {
-                robot.frontRightTurn.setPower(0);
-                robot.frontLeftTurn.setPower(0);
-                robot.rearRightTurn.setPower(0);
-                robot.rearLeftTurn.setPower(0);
-            }
+            // Get Current Encoder Position
+            int encoderPosition = 0; // TODO: Get encoder value
+
+            // Calculate error
+            int error = reference - encoderPosition;
+
+            // Calculate Rate of Change of the error
+            double derivative = (error - lastError) / pidTimer.seconds();
+
+            // Calculate Sum of All error over time
+            integralSum = integralSum + (error * pidTimer.seconds());
+
+            // Set servo power
+            double out = (pidCoef.p * error) + (pidCoef.i * error) + (pidCoef.d * error);
+
+            /**  Note to self: this loop will most likely have to be changed to account for the different values of the individual swerve modules*/
+
+            robot.frontLeftTurn.setPower(out);
+            robot.frontRightTurn.setPower(out);
+            robot.rearLeftTurn.setPower(out);
+            robot.rearRightTurn.setPower(out);
+
+            lastError = error;
         }
 
     }
