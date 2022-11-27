@@ -163,6 +163,9 @@ public class RRBotSwerveDrive
             robot.rearRightTurn.setPower(out);
 
             lastError = error;
+
+            if(lastError == 0)
+                hasNotReached = false;
         }
 
     }
