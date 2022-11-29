@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.util.Range;
 public class RRBotTeleop extends OpMode {
     // Declare OpMode members.
     RRBotHardware robot = new RRBotHardware();
+    RRBotSwerveDrive swerve = new RRBotSwerveDrive(robot);
     private ElapsedTime runtime = new ElapsedTime();
+    double turnAngle = 0.0;
 
     // Construct Swerve Drive Class
     //RRBotSwerveDrive drive = new RRBotSwerveDrive(robot);
@@ -69,6 +71,8 @@ public class RRBotTeleop extends OpMode {
         } else{
             drive.AutoMoveEndCheck();
         }*/
-        robot.frontLeftDrive.setPower(gamepad1.right_stick_x);
+        swerve.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        swerve.setServoAngle(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        swerve.TurnFacing(gamepad1.right_stick_x, -gamepad1.right_stick_y);
     }
 }

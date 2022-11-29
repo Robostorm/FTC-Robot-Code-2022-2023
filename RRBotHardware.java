@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogInputController;
+import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,8 +27,21 @@ public class RRBotHardware
     public CRServo frontRightTurn = null;
     public CRServo rearLeftTurn = null;
     public CRServo rearRightTurn = null;
+    public AnalogInput frontLeftEnc = null;
+    public AnalogInput frontRightEnc = null;
+    public AnalogInput rearLeftEnc = null;
+    public AnalogInput rearRightEnc = null;
 
-    public final int ENCODER_TO_ANGLE = 90; // TODO: Set actual value
+    public enum SERVOS {
+        FRONT_LEFT,
+        FRONT_RIGHT,
+        REAR_LEFT,
+        REAR_RIGHT
+    }
+
+    /** Set the multiplier for encoders */
+    // Current value is for 5v Encoder, Lamprey2 Encoder Specifically
+    public final double ENCODER_TO_ANGLE = 72.0; // 109.091 for 3.3v
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -86,6 +102,11 @@ public class RRBotHardware
         frontRightTurn.setPower(0);
         rearLeftTurn.setPower(0);
         rearRightTurn.setPower(0);
+
+        frontLeftEnc = hwMap.get(AnalogInput.class, "front_left_enc");
+        frontRightEnc = hwMap.get(AnalogInput.class, "front_right_enc");
+        rearLeftEnc = hwMap.get(AnalogInput.class, "rear_left_enc");
+        rearRightEnc = hwMap.get(AnalogInput.class, "rear_right_enc");
 
 
     }

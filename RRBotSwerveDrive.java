@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Controls the robot's swerve drive base
- * @author John Brereton
+ * @author Visvam Rajesh
  * @since 2022-10-12
  */
 
@@ -17,13 +17,12 @@ public class RRBotSwerveDrive
 
     private boolean isAutoMove = false;
     private double autoTime;
-    private int encoderPos = 0; //TODO: Get Encoder Position
 
     /** Set the constants for the PID controller */
     //TODO: Set constants to their proper values
-    private final double Kp = 0;
-    private final double Ki = 0;
-    private final double Kd = 0;
+    private final double Kp = 0.2;
+    private final double Ki = 0.0;
+    private final double Kd = 0.0002;
     private final PIDCoefficients pidCoef = new PIDCoefficients(Kp, Ki, Kd);
 
     /**
@@ -92,7 +91,7 @@ public class RRBotSwerveDrive
      * @param rightX X position of right joystick
      * @param rightY Y position of right joystick
      */
-    public void setMotorPower(double leftX, double leftY, double rightX, double rightY)
+    public void setMotorPower(double leftX, double leftY)
     {
         //calculate the velocities
         //double[] velocities = calcVelocities(leftX, leftY, rightX, rightY);
@@ -119,14 +118,38 @@ public class RRBotSwerveDrive
         return (radians * 180) / Math.PI;
     }
 
+    /**
+     * Turns all servos based on the left stick position
+     * @param leftX the x-axis of the left stick
+     * @param leftY the y-axis of the left stick
+     */
     public void setServoAngle(double leftX, double leftY)
     {
-        // TODO: Reset encoder value or calculate difference
-        //  ex. servo.setPosition(0);
-
         double angle = getAngle(leftX, leftY); // Goal Angle
 
-        int reference = (int) angle * robot.ENCODER_TO_ANGLE; // Goal Encoder Value
+        // Use other setServoAngle method to control each servo
+        setServoAngle(angle, RRBotHardware.SERVOS.FRONT_LEFT);
+        setServoAngle(angle, RRBotHardware.SERVOS.FRONT_RIGHT);
+        setServoAngle(angle, RRBotHardware.SERVOS.REAR_LEFT);
+        setServoAngle(angle, RRBotHardware.SERVOS.REAR_RIGHT);
+    }
+
+    public void setServoAngle(double angle, RRBotHardware.SERVOS servo)
+    {
+        /**
+         * Only needed if encoder increments infinitely *
+        int startEncVal = 0;
+        if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
+            startEncVal = (int)(robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+        if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
+            startEncVal = (int)(robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+        if(servo == RRBotHardware.SERVOS.REAR_LEFT)
+            startEncVal = (int)(robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+        if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
+            startEncVal = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+         */
+
+        int reference = (int) (angle * robot.ENCODER_TO_ANGLE); // Goal Encoder Value
 
         ElapsedTime pidTimer = new ElapsedTime(); // Elapsed Time of each iteration of the PID Control Loop
 
@@ -141,7 +164,15 @@ public class RRBotSwerveDrive
         while(hasNotReached)
         {
             // Get Current Encoder Position
-            int encoderPosition = 0; // TODO: Get encoder value
+            int encoderPosition = 0; // If it increments infinitely, then subtract startEncVal from encoderPosition
+            if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
+                encoderPosition = (int)(robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+            if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
+                encoderPosition = (int)(robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+            if(servo == RRBotHardware.SERVOS.REAR_LEFT)
+                encoderPosition = (int)(robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+            if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
+                encoderPosition = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
 
             // Calculate error
             int error = reference - encoderPosition;
@@ -157,19 +188,38 @@ public class RRBotSwerveDrive
 
             /**  Note to self: this loop will most likely have to be changed to account for the different values of the individual swerve modules*/
 
-            robot.frontLeftTurn.setPower(out);
-            robot.frontRightTurn.setPower(out);
-            robot.rearLeftTurn.setPower(out);
-            robot.rearRightTurn.setPower(out);
+            if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
+                robot.frontLeftTurn.setPower(out);
+            if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
+                robot.frontRightTurn.setPower(out);
+            if(servo == RRBotHardware.SERVOS.REAR_LEFT)
+                robot.rearLeftTurn.setPower(out);
+            if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
+                robot.rearRightTurn.setPower(out);
 
             lastError = error;
 
             if(lastError == 0)
                 hasNotReached = false;
         }
-
     }
 
+    /**
+     * Turns the robot to face a specific direction based on right stick position. Meant to be used in teleop
+     * @param rightX the x-axis of the right stick
+     * @param rightY the y-axis of the right stick
+     */
+    public void TurnFacing(double rightX, double rightY)
+    {
+        // Get Angle to Turn to
+        double angle = getAngle(rightX, rightY);
+
+        // Turn each servo individually
+        setServoAngle(angle, RRBotHardware.SERVOS.FRONT_LEFT);
+        setServoAngle(90.0 + angle, RRBotHardware.SERVOS.FRONT_RIGHT);
+        setServoAngle(180.0 + angle, RRBotHardware.SERVOS.REAR_RIGHT);
+        setServoAngle(270.0 + angle, RRBotHardware.SERVOS.REAR_LEFT);
+    }
     /**
      * Automatically moves the robot based on a set speed and time. Meant to be used in teleop.
      * @param speed speed of movement
