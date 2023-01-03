@@ -161,18 +161,20 @@ public class RRBotSwerveDrive
 
         //TODO: Write code to set servo position based on an angle in degrees
 
+        double fauxEncVal = Math.random() * 5.0;
+
         while(hasNotReached)
         {
             // Get Current Encoder Position
             int encoderPosition = 0; // If it increments infinitely, then subtract startEncVal from encoderPosition
             if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
-                encoderPosition = (int)(robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+                encoderPosition = (int)(fauxEncVal * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.frontLeftEnc.getVoltage()
             if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
-                encoderPosition = (int)(robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+                encoderPosition = (int)(fauxEncVal * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.frontRightEnc.getVoltage()
             if(servo == RRBotHardware.SERVOS.REAR_LEFT)
-                encoderPosition = (int)(robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+                encoderPosition = (int)(fauxEncVal * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearLeftEnc.getVoltage()
             if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
-                encoderPosition = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
+                encoderPosition = (int)(fauxEncVal * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearRightEnc.getVoltage()
 
             // Calculate error
             int error = reference - encoderPosition;
@@ -201,6 +203,7 @@ public class RRBotSwerveDrive
 
             if(lastError == 0)
                 hasNotReached = false;
+            fauxEncVal -= 0.1;
         }
     }
 
