@@ -41,8 +41,8 @@ public class RRBotHardware
     }
 
     /** Set the multiplier for encoders */
-    // Current value is for 5v Encoder, Lamprey2 Encoder Specifically
-    public final double ENCODER_TO_ANGLE = 72.0; // 109.091 for 3.3v
+    // Current value is for 3.3v Encoder, Lamprey2 Encoder Specifically
+    public final double ENCODER_TO_ANGLE = 109.090909091; // 72.0 for 5.0v
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
