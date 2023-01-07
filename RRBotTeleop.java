@@ -14,7 +14,6 @@ public class RRBotTeleop extends OpMode {
     RRBotHardware robot = new RRBotHardware();
     RRBotSwerveDrive swerve = new RRBotSwerveDrive(robot);
     private ElapsedTime runtime = new ElapsedTime();
-    double turnAngle = 0.0;
 
     // Construct Swerve Drive Class
     //RRBotSwerveDrive drive = new RRBotSwerveDrive(robot);
@@ -49,10 +48,11 @@ public class RRBotTeleop extends OpMode {
      */
     @Override
     public void loop() {
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
         DriveUpdate();
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.update();
     }
 
     /*
@@ -66,13 +66,23 @@ public class RRBotTeleop extends OpMode {
      * Updates the drive system with manual and automatic movements
      */
     public void DriveUpdate(){
+
+        telemetry.addData("Gamepad(Left)", "X: (%.2f), Y: (%.2f)", gamepad1.left_stick_x, gamepad1.left_stick_y);
+        telemetry.addData("Gamepad(Right)", "X: (%.2f), Y: (%.2f)", gamepad1.right_stick_x, gamepad1.right_stick_y);
+        telemetry.addData("Encoder", "FL: (%.2f) FR: (%.2f) RL: (%.2f) RR: (%.2f)", robot.frontLeftEnc.getVoltage(), robot.frontRightEnc.getVoltage(), robot.rearRightEnc.getVoltage(), robot.rearLeftEnc.getVoltage());
         /*if(!drive.getIsAutoMove()) {
             drive.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, -gamepad1.right_stick_y, true);
         } else{
             drive.AutoMoveEndCheck();
         }*/
-        swerve.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-        swerve.setServoAngle(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-        swerve.TurnFacing(gamepad1.right_stick_x, -gamepad1.right_stick_y);
+        if(!swerve.getIsAutoMove()){
+            swerve.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+            telemetry.addData("Update", "Passed Motor Power Check");
+            swerve.setServoAngle(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+            telemetry.addData("Update", "Passed Servo Angle Check");
+            swerve.TurnFacing(gamepad1.right_stick_x, -gamepad1.right_stick_y);
+        }else{
+            swerve.AutoMoveEndCheck();
+        }
     }
 }

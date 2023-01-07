@@ -21,7 +21,7 @@ public class RRBotSwerveDrive
     /** Set the constants for the PID controller */
     //TODO: Set constants to their proper values
     private final double Kp = 0.2;
-    private final double Ki = 0.0;
+    private final double Ki = 0.00001;
     private final double Kd = 0.0002;
     private final PIDCoefficients pidCoef = new PIDCoefficients(Kp, Ki, Kd);
 
@@ -157,11 +157,12 @@ public class RRBotSwerveDrive
 
         // Values we will use through out the duration of the PID Control Loop
         double integralSum = 0;
-        double lastError = 0;
+        int lastError = 0;
 
         //TODO: Write code to set servo position based on an angle in degrees
 
         //double fauxEncVal = Math.random() * 5.0;
+
 
         while(hasNotReached)
         {
@@ -186,7 +187,7 @@ public class RRBotSwerveDrive
             integralSum = integralSum + (error * pidTimer.seconds());
 
             // Set servo power
-            double out = (pidCoef.p * error) + (pidCoef.i * error) + (pidCoef.d * error);
+            double out = (pidCoef.p * error) + (pidCoef.i * integralSum) + (pidCoef.d * derivative);
 
             /**  Note to self: this loop will most likely have to be changed to account for the different values of the individual swerve modules*/
 
@@ -201,7 +202,7 @@ public class RRBotSwerveDrive
 
             lastError = error;
 
-            if(lastError == 0)
+            if(lastError <= 10)
                 hasNotReached = false;
         }
     }

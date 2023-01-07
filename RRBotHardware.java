@@ -93,10 +93,10 @@ public class RRBotHardware
         rearLeftTurn = hwMap.get(CRServo.class, "rear_left_turn");
         rearRightTurn = hwMap.get(CRServo.class, "rear_right_turn");
 
-        frontLeftTurn.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightTurn.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRightTurn.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearLeftTurn.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftTurn.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightTurn.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightTurn.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftTurn.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set servo power on init
         frontLeftTurn.setPower(0);
