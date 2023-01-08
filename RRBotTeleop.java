@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="Swerve Drive", group="Iterative Opmode")
 
@@ -24,7 +26,6 @@ public class RRBotTeleop extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-
         telemetry.addData("Status", "Initialized");
     }
 
@@ -70,17 +71,23 @@ public class RRBotTeleop extends OpMode {
         telemetry.addData("Gamepad(Left)", "X: (%.2f), Y: (%.2f)", gamepad1.left_stick_x, gamepad1.left_stick_y);
         telemetry.addData("Gamepad(Right)", "X: (%.2f), Y: (%.2f)", gamepad1.right_stick_x, gamepad1.right_stick_y);
         telemetry.addData("Encoder", "FL: (%.2f) FR: (%.2f) RL: (%.2f) RR: (%.2f)", robot.frontLeftEnc.getVoltage(), robot.frontRightEnc.getVoltage(), robot.rearRightEnc.getVoltage(), robot.rearLeftEnc.getVoltage());
+        telemetry.addData("Last Error", swerve.getLastError());
         /*if(!drive.getIsAutoMove()) {
             drive.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, -gamepad1.right_stick_y, true);
         } else{
             drive.AutoMoveEndCheck();
         }*/
         if(!swerve.getIsAutoMove()){
-            swerve.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-            telemetry.addData("Update", "Passed Motor Power Check");
-            swerve.setServoAngle(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-            telemetry.addData("Update", "Passed Servo Angle Check");
-            swerve.TurnFacing(gamepad1.right_stick_x, -gamepad1.right_stick_y);
+            if(gamepad1.left_stick_x > 0.1f && -gamepad1.left_stick_y > 0.1f)
+            {
+                swerve.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+                telemetry.addData("Update", "Passed Motor Power Check");
+                swerve.setServoAngle(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+                telemetry.addData("Update", "Passed Servo Angle Check");
+            }
+            if(gamepad1.right_stick_x > 0.1f && -gamepad1.right_stick_y > 0.1f)
+                swerve.TurnFacing(gamepad1.right_stick_x, -gamepad1.right_stick_y);
+            telemetry.addData("Update", "Passed Turn Facing Check");
         }else{
             swerve.AutoMoveEndCheck();
         }

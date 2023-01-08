@@ -20,10 +20,14 @@ public class RRBotSwerveDrive
 
     /** Set the constants for the PID controller */
     //TODO: Set constants to their proper values
-    private final double Kp = 0.2;
-    private final double Ki = 0.00001;
-    private final double Kd = 0.0002;
+    private final double Kp = 0.02;
+    private final double Ki = 0.0001;
+    private final double Kd = 0.00002;
     private final PIDCoefficients pidCoef = new PIDCoefficients(Kp, Ki, Kd);
+
+    boolean hasNotReached; // Condition to escape PID Control Loop
+
+    int lastError; // The last error of the swerve module
 
     /**
      * Constructor gets hardware object from teleop class
@@ -202,7 +206,7 @@ public class RRBotSwerveDrive
 
             lastError = error;
 
-            if(lastError <= 10)
+            if(lastError <= 15)
                 hasNotReached = false;
         }
     }
@@ -218,10 +222,13 @@ public class RRBotSwerveDrive
         double angle = getAngle(rightX, rightY);
 
         // Turn each servo individually
-        setServoAngle(angle, RRBotHardware.SERVOS.FRONT_LEFT);
-        setServoAngle(90.0 + angle, RRBotHardware.SERVOS.FRONT_RIGHT);
-        setServoAngle(180.0 + angle, RRBotHardware.SERVOS.REAR_RIGHT);
-        setServoAngle(270.0 + angle, RRBotHardware.SERVOS.REAR_LEFT);
+        if(angle > 10)
+        {
+            setServoAngle(angle, RRBotHardware.SERVOS.FRONT_LEFT);
+            setServoAngle(90.0 + angle, RRBotHardware.SERVOS.FRONT_RIGHT);
+            setServoAngle(180.0 + angle, RRBotHardware.SERVOS.REAR_RIGHT);
+            setServoAngle(270.0 + angle, RRBotHardware.SERVOS.REAR_LEFT);
+        }
     }
     /**
      * Automatically moves the robot based on a set speed and time. Meant to be used in teleop.
@@ -251,6 +258,8 @@ public class RRBotSwerveDrive
             isAutoMove = false;
         }
     }
+
+    public int getLastError(){ return lastError; }
 
     /**
      * Returns whether an auto move is currently occurring
