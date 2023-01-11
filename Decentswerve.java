@@ -46,7 +46,7 @@ public class Decentswerve extends LinearOpMode {
     private DcMotorEx FLD = null;
     private DcMotorEx FRD = null;
 
-    private CRServo INS = null;
+//    private CRServo INS = null;
     private Servo INFL = null;
     private DcMotorEx INE = null;
     private Servo DROP = null;
@@ -156,7 +156,7 @@ public class Decentswerve extends LinearOpMode {
         BRT.setDirection(CRServo.Direction.REVERSE);
         FLT.setDirection(CRServo.Direction.REVERSE);
         FRT.setDirection(CRServo.Direction.REVERSE);
-        INS.setDirection(DcMotorSimple.Direction.REVERSE);
+//        INS.setDirection(DcMotorSimple.Direction.REVERSE);
 
         dashboard = FtcDashboard.getInstance();
 
@@ -255,24 +255,24 @@ public class Decentswerve extends LinearOpMode {
 
 
 
-            if (gamepad2.a){
-                INFP = 0.975;
-            }
-            if (!gamepad2.a) {
-                INFP = 0.2;
-            }
-            if (gamepad2.left_bumper) {
-                INFP = 0.1;}
-            INFL.setPosition(INFP);
-            //DROP.setPosition(DROPP);
-
-            double OTDP=0;
-            if (gamepad2.y){
-                OTDP = 1;
-            }
-            if (!gamepad2.y){
-                OTDP = 0.5;
-            }
+//            if (gamepad2.a){
+//                INFP = 0.975;
+//            }
+//            if (!gamepad2.a) {
+//                INFP = 0.2;
+//            }
+//            if (gamepad2.left_bumper) {
+//                INFP = 0.1;}
+//            INFL.setPosition(INFP);
+//            //DROP.setPosition(DROPP);
+//
+//            double OTDP=0;
+//            if (gamepad2.y){
+//                OTDP = 1;
+//            }
+//            if (!gamepad2.y){
+//                OTDP = 0.5;
+//            }
 //            OTD.setPosition(OTDP);
 //            //depositing pos = 1
 //            //resting pos = 0.5
@@ -292,18 +292,18 @@ public class Decentswerve extends LinearOpMode {
             FLP = FLE.getVoltage() * 74.16;
             FRP = FRE.getVoltage() * 74.16;
 
-            if(INFP>0.2){
-                INS.setPower(1);
-            }
-            else if(gamepad2.right_bumper){
-                INS.setPower(1);
-            }
-            else if(gamepad2.b){
-                INS.setPower(-0.25);
-
-            }
-            else{
-                INS.setPower(0);}
+//            if(INFP>0.2){
+//                INS.setPower(1);
+//            }
+//            else if(gamepad2.right_bumper){
+//                INS.setPower(1);
+//            }
+//            else if(gamepad2.b){
+//                INS.setPower(-0.25);
+//
+//            }
+//            else{
+//                INS.setPower(0);}
 
 
             if(BLP <= -180) {
@@ -422,7 +422,7 @@ public class Decentswerve extends LinearOpMode {
             if (Math.abs(FRTerror)<tolerance){
                 FRT.setPower(0);
             }
-            OTE.setPower(gamepad2.right_stick_y);
+            //OTE.setPower(gamepad2.right_stick_y);
             String color = "#0f2259";
             String color1 = "#b28c00";
             telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
@@ -430,7 +430,7 @@ public class Decentswerve extends LinearOpMode {
             telemetry.addData("reference",BLTreference);
             telemetry.addData("BLP",BLP);
             telemetry.addData("OTDP",OTDP);
-            telemetry.addData("OTDPOS",OTD.getPosition());
+        //    telemetry.addData("OTDPOS",OTD.getPosition());
             telemetry.update();
         }
     }
