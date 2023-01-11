@@ -32,6 +32,8 @@ public class RRBotHardware
     public AnalogInput frontRightEnc = null;
     public AnalogInput rearLeftEnc = null;
     public AnalogInput rearRightEnc = null;
+    public DcMotor armMotor = null;
+    public Servo clawServo = null;
 
     public enum SERVOS {
         FRONT_LEFT,
@@ -108,6 +110,17 @@ public class RRBotHardware
         frontRightEnc = hwMap.get(AnalogInput.class, "front_right_enc");
         rearLeftEnc = hwMap.get(AnalogInput.class, "rear_left_enc");
         rearRightEnc = hwMap.get(AnalogInput.class, "rear_right_enc");
+
+        armMotor = hwMap.get(DcMotor.class, "arm_motor");
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setPower(0);
+        armMotor.setTargetPosition(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        clawServo = hwMap.get(Servo.class, "claw_servo");
+        clawServo.setDirection(Servo.Direction.FORWARD);
+        clawServo.setPosition(1);
 
     }
 }
