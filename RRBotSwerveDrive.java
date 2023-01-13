@@ -181,6 +181,9 @@ public class RRBotSwerveDrive
             if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
                 encoderPosition = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearRightEnc.getVoltage()
 
+            if(encoderPosition <= 355)
+                encoderPosition = 0;
+
             // Calculate error
             int error = reference - encoderPosition;
 
