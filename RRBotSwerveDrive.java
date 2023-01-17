@@ -21,8 +21,8 @@ public class RRBotSwerveDrive
     /** Set the constants for the PID controller */
     //TODO: Set constants to their proper values
     private final double Kp = 0.02;
-    private final double Ki = 0.0001;
-    private final double Kd = 0.00002;
+    private final double Ki = 0.01;
+    private final double Kd = 0.001;
     private final PIDCoefficients pidCoef = new PIDCoefficients(Kp, Ki, Kd);
 
     boolean hasNotReached; // Condition to escape PID Control Loop
@@ -181,7 +181,7 @@ public class RRBotSwerveDrive
             if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
                 encoderPosition = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearRightEnc.getVoltage()
 
-            if(encoderPosition <= 355)
+            if(encoderPosition >= 355)
                 encoderPosition = 0;
 
             // Calculate error

@@ -92,9 +92,10 @@ public class RRBotTeleop extends OpMode {
                 swerve.setServoAngle(gamepad1.left_stick_x, -gamepad1.left_stick_y);
                 telemetry.addData("Update", "Passed Servo Angle Check");
             }
-            if(gamepad1.right_stick_x > 0.1f && -gamepad1.right_stick_y > 0.1f)
+            if(gamepad1.right_stick_x > 0.1f && -gamepad1.right_stick_y > 0.1f){
                 swerve.TurnFacing(gamepad1.right_stick_x, -gamepad1.right_stick_y);
-            telemetry.addData("Update", "Passed Turn Facing Check");
+                telemetry.addData("Update", "Passed Turn Facing Check");
+            }
         }else{
             swerve.AutoMoveEndCheck();
         }
