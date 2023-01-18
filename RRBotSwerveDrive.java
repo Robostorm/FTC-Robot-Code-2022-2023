@@ -25,9 +25,11 @@ public class RRBotSwerveDrive
     private final double Kd = 0.001;
     private final PIDCoefficients pidCoef = new PIDCoefficients(Kp, Ki, Kd);
 
-    boolean hasNotReached; // Condition to escape PID Control Loop
+    private boolean hasNotReached; // Condition to escape PID Control Loop
 
-    int lastError; // The last error of the swerve module
+    private int lastError; // The last error of the swerve module
+    private int encoderPosition = 0; // current robot encoder position
+    private int reference = 0; // goal of the swerve module
 
     /**
      * Constructor gets hardware object from teleop class
@@ -49,51 +51,49 @@ public class RRBotSwerveDrive
         return Math.sqrt(Math.pow(leftX, 2) + Math.pow(leftY, 2));
     }
 
-    /**
-     * Calculates the velocity values for the drive motors in a mecanum configuration.
-     * @param leftX X position of left joystick
-     * @param leftY Y position of left joystick
-     * @param rightX X position of right joystick
-     * @param rightY Y position of right joystick
-     * @return velocities - array of motor velocities
-     */
-    public double[] calcVelocities(double leftX, double leftY, double rightX, double rightY)
-    {
-        double moveX = rightX;
-        double moveY1 = leftY;
-        double turn = leftX;
-        double moveY2 = rightY;
-
-        double v1 = moveY1 + moveX + turn + moveY2;
-        double v2 = moveY1 - moveX - turn + moveY2;
-        double v3 = moveY1 + moveX - turn + moveY2;
-        double v4 = moveY1 - moveX + turn + moveY2;
-
-        double max = Math.abs(v1);
-        if(Math.abs(v2) > max)
-            max = Math.abs(v2);
-        if(Math.abs(v3) > max)
-            max = Math.abs(v3);
-        if(Math.abs(v4) > max)
-            max = Math.abs(v4);
-        if(max > 1)
-        {
-            v1 /= max;
-            v2 /= max;
-            v3 /= max;
-            v4 /= max;
-        }
-
-        double[] velocities = {v1, v2, v3, v4};
-        return velocities;
-    }
+//    /**
+//     * Calculates the velocity values for the drive motors in a mecanum configuration.
+//     * @param leftX X position of left joystick
+//     * @param leftY Y position of left joystick
+//     * @param rightX X position of right joystick
+//     * @param rightY Y position of right joystick
+//     * @return velocities - array of motor velocities
+//     */
+//    public double[] calcVelocities(double leftX, double leftY, double rightX, double rightY)
+//    {
+//        double moveX = rightX;
+//        double moveY1 = leftY;
+//        double turn = leftX;
+//        double moveY2 = rightY;
+//
+//        double v1 = moveY1 + moveX + turn + moveY2;
+//        double v2 = moveY1 - moveX - turn + moveY2;
+//        double v3 = moveY1 + moveX - turn + moveY2;
+//        double v4 = moveY1 - moveX + turn + moveY2;
+//
+//        double max = Math.abs(v1);
+//        if(Math.abs(v2) > max)
+//            max = Math.abs(v2);
+//        if(Math.abs(v3) > max)
+//            max = Math.abs(v3);
+//        if(Math.abs(v4) > max)
+//            max = Math.abs(v4);
+//        if(max > 1)
+//        {
+//            v1 /= max;
+//            v2 /= max;
+//            v3 /= max;
+//            v4 /= max;
+//        }
+//
+//        double[] velocities = {v1, v2, v3, v4};
+//        return velocities;
+//    }
 
     /**
      * Sets the motor power for manual drive. The parameters are sent to calcVelocities.
      * @param leftX X position of left joystick
      * @param leftY Y position of left joystick
-     * @param rightX X position of right joystick
-     * @param rightY Y position of right joystick
      */
     public void setMotorPower(double leftX, double leftY)
     {
@@ -153,25 +153,29 @@ public class RRBotSwerveDrive
             startEncVal = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
          */
 
-        int reference = (int) (angle); // Goal Encoder Value
+        reference = (int) (angle); // Goal Encoder Value
+
+        // Check if reference is a negative angle, if so, change it to a positive one.
+        if(reference < 0)
+            reference += 360;
 
         ElapsedTime pidTimer = new ElapsedTime(); // Elapsed Time of each iteration of the PID Control Loop
 
-        boolean hasNotReached = true; // Condition to escape PID Control Loop
+        hasNotReached = true; // Condition to escape PID Control Loop
 
         // Values we will use through out the duration of the PID Control Loop
         double integralSum = 0;
-        int lastError = 0;
+        lastError = 0;
 
         //TODO: Write code to set servo position based on an angle in degrees
 
-        //double fauxEncVal = Math.random() * 5.0;
+        //double fauxEncVal = Math.random() * 3.3;
 
 
         while(hasNotReached)
         {
             // Get Current Encoder Position
-            int encoderPosition = 0; // If it increments infinitely, then subtract startEncVal from encoderPosition
+            encoderPosition = 0; // If it increments infinitely, then subtract startEncVal from encoderPosition
             if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
                 encoderPosition = (int)(robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.frontLeftEnc.getVoltage()
             if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
@@ -212,6 +216,14 @@ public class RRBotSwerveDrive
             if(lastError <= 15)
                 hasNotReached = false;
         }
+        if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
+            robot.frontLeftTurn.setPower(0);
+        if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
+            robot.frontRightTurn.setPower(0);
+        if(servo == RRBotHardware.SERVOS.REAR_LEFT)
+            robot.rearLeftTurn.setPower(0);
+        if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
+            robot.rearRightTurn.setPower(0);
     }
 
     /**
@@ -262,7 +274,29 @@ public class RRBotSwerveDrive
         }
     }
 
+    /**
+     * Returns the last error of the swerve module
+     * @return lastError
+     */
     public int getLastError(){ return lastError; }
+
+    /**
+     * Returns the goal encoder position of the swerve module
+     * @return reference
+     */
+    public int getReference(){ return reference; }
+
+    /**
+     * Returns the current encoder position of the swerve module
+     * @return encoderPosition
+     */
+    public int getEncoderPosition(){ return encoderPosition; }
+
+    /**
+     * Returns if the swerve module has reached its goal
+     * @return hasNotReached
+     */
+    public boolean getHasNotReached(){ return hasNotReached; }
 
     /**
      * Returns whether an auto move is currently occurring

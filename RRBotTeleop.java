@@ -79,6 +79,9 @@ public class RRBotTeleop extends OpMode {
         telemetry.addData("Gamepad(Right)", "X: (%.2f), Y: (%.2f)", gamepad1.right_stick_x, gamepad1.right_stick_y);
         telemetry.addData("Encoder", "FL: (%.2f) FR: (%.2f) RL: (%.2f) RR: (%.2f)", robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE, robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE, robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE, robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
         telemetry.addData("Last Error", swerve.getLastError());
+        telemetry.addData("Goal Encoder", swerve.getReference());
+        telemetry.addData("Has Reached?", !swerve.getHasNotReached());
+        telemetry.addData("PID Encoder Position", swerve.getEncoderPosition());
         /*if(!drive.getIsAutoMove()) {
             drive.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, -gamepad1.right_stick_y, true);
         } else{
