@@ -100,10 +100,10 @@ public class RRBotSwerveDrive
         //calculate the velocities
         //double[] velocities = calcVelocities(leftX, leftY, rightX, rightY);
         double power = getPower(leftX, leftY);
-        int angle = (int)getAngle(leftX, leftY);
-
-        if(angle >= 180)
-            power *= -1;
+//        int angle = (int)getAngle(leftX, leftY);
+//
+//        if(angle >= 180)
+//            power *= -1;
 
         //set the motor power
 
@@ -123,7 +123,18 @@ public class RRBotSwerveDrive
         //The angle is the inverse tangent of the right triangle formed by leftX and leftY
         double radians = Math.atan(leftY / leftX);
 
-        return (radians * 180) / Math.PI;
+        radians *= (180 / Math.PI);
+
+        if(leftX == 0.0 && leftY > 0.0)
+            radians = 90.0;
+        if(leftY == 0.0 && leftX > 0.0)
+            radians = 0.0;
+        if(leftX == 0.0 && leftY < 0.0)
+            radians = 270;
+        if(leftY == 0.0 && leftX < 0.0)
+            radians = 180;
+
+        return radians;
     }
 
     /**
@@ -159,12 +170,12 @@ public class RRBotSwerveDrive
 
         reference = (int) (angle); // Goal Encoder Value
 
-        if(reference >= 180)
-            reference -= 180;
-
         // Check if reference is a negative angle, if so, change it to a positive one.
         if(reference < 0)
             reference += 360;
+
+        if(reference >= 180)
+            reference -= 180;
 
         if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
             robot.frontLeftTurn.setPosition(angle); // swap fauxEncVal for robot.frontLeftEnc.getVoltage()

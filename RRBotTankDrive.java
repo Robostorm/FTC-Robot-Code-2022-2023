@@ -59,25 +59,25 @@ public class RRBotTankDrive extends LinearOpMode {
 //            if(robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE < 123.07)
 //                robot.frontLeftTurn.setPower(-0.2);
 //            else
-                robot.frontLeftTurn.setPower(0);
+//                robot.frontLeftTurn.setPower(0);
 //            if(robot.frontRightEnc.getVoltage()  * robot.ENCODER_TO_ANGLE > 193.32)
 //                robot.frontRightTurn.setPower(0.2);
 //            if(robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE < 193.32)
 //                robot.frontRightTurn.setPower(-0.2);
 //            else
-                robot.frontRightTurn.setPower(0);
+//                robot.frontRightTurn.setPower(0);
 //            if(robot.rearRightEnc.getVoltage()  * robot.ENCODER_TO_ANGLE > 43.5)
 //                robot.rearRightTurn.setPower(0.2);
 //            if(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE < 43.5)
 //                robot.rearRightTurn.setPower(-0.2);
 //            else
-                robot.rearRightTurn.setPower(0);
+//                robot.rearRightTurn.setPower(0);
 //            if(robot.rearLeftEnc.getVoltage()  * robot.ENCODER_TO_ANGLE > 182.72)
 //                robot.rearLeftTurn.setPower(0.2);
 //            if(robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE < 182.72)
 //                robot.rearLeftTurn.setPower(-0.2);
 //            else
-                robot.rearLeftTurn.setPower(0);
+//                robot.rearLeftTurn.setPower(0);
 
 
             // Show the elapsed game time and wheel power.
