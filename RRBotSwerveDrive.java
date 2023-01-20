@@ -100,6 +100,10 @@ public class RRBotSwerveDrive
         //calculate the velocities
         //double[] velocities = calcVelocities(leftX, leftY, rightX, rightY);
         double power = getPower(leftX, leftY);
+        int angle = (int)getAngle(leftX, leftY);
+
+        if(angle >= 180)
+            power *= -1;
 
         //set the motor power
 
@@ -155,75 +159,89 @@ public class RRBotSwerveDrive
 
         reference = (int) (angle); // Goal Encoder Value
 
+        if(reference >= 180)
+            reference -= 180;
+
         // Check if reference is a negative angle, if so, change it to a positive one.
         if(reference < 0)
             reference += 360;
 
-        ElapsedTime pidTimer = new ElapsedTime(); // Elapsed Time of each iteration of the PID Control Loop
-
-        hasNotReached = true; // Condition to escape PID Control Loop
-
-        // Values we will use through out the duration of the PID Control Loop
-        double integralSum = 0;
-        lastError = 0;
-
-        //TODO: Write code to set servo position based on an angle in degrees
-
-        //double fauxEncVal = Math.random() * 3.3;
-
-
-        while(hasNotReached)
-        {
-            // Get Current Encoder Position
-            encoderPosition = 0; // If it increments infinitely, then subtract startEncVal from encoderPosition
-            if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
-                encoderPosition = (int)(robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.frontLeftEnc.getVoltage()
-            if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
-                encoderPosition = (int)(robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.frontRightEnc.getVoltage()
-            if(servo == RRBotHardware.SERVOS.REAR_LEFT)
-                encoderPosition = (int)(robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearLeftEnc.getVoltage()
-            if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
-                encoderPosition = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearRightEnc.getVoltage()
-
-            if(encoderPosition >= 355)
-                encoderPosition = 0;
-
-            // Calculate error
-            int error = reference - encoderPosition;
-
-            // Calculate Rate of Change of the error
-            double derivative = (error - lastError) / pidTimer.seconds();
-
-            // Calculate Sum of All error over time
-            integralSum = integralSum + (error * pidTimer.seconds());
-
-            // Set servo power
-            double out = (pidCoef.p * error) + (pidCoef.i * integralSum) + (pidCoef.d * derivative);
-
-            /**  Note to self: this loop will most likely have to be changed to account for the different values of the individual swerve modules*/
-
-            if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
-                robot.frontLeftTurn.setPower(out);
-            if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
-                robot.frontRightTurn.setPower(out);
-            if(servo == RRBotHardware.SERVOS.REAR_LEFT)
-                robot.rearLeftTurn.setPower(out);
-            if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
-                robot.rearRightTurn.setPower(out);
-
-            lastError = error;
-
-            if(lastError <= 15)
-                hasNotReached = false;
-        }
         if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
-            robot.frontLeftTurn.setPower(0);
+            robot.frontLeftTurn.setPosition(angle); // swap fauxEncVal for robot.frontLeftEnc.getVoltage()
         if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
-            robot.frontRightTurn.setPower(0);
+            robot.frontRightTurn.setPosition(angle); // swap fauxEncVal for robot.frontRightEnc.getVoltage()
         if(servo == RRBotHardware.SERVOS.REAR_LEFT)
-            robot.rearLeftTurn.setPower(0);
+            robot.rearLeftTurn.setPosition(angle); // swap fauxEncVal for robot.rearLeftEnc.getVoltage()
         if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
-            robot.rearRightTurn.setPower(0);
+            robot.rearRightTurn.setPosition(angle);
+
+        /**The code below is old. Look at it if you want*/
+
+//        ElapsedTime pidTimer = new ElapsedTime(); // Elapsed Time of each iteration of the PID Control Loop
+//
+//        hasNotReached = true; // Condition to escape PID Control Loop
+//
+//        // Values we will use through out the duration of the PID Control Loop
+//        double integralSum = 0;
+//        lastError = 0;
+//
+//        //TODO: Write code to set servo position based on an angle in degrees
+//
+//        //double fauxEncVal = Math.random() * 3.3;
+
+
+//        while(hasNotReached)
+//        {
+//            // Get Current Encoder Position
+//            encoderPosition = 0; // If it increments infinitely, then subtract startEncVal from encoderPosition
+//            if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
+//                encoderPosition = (int)(robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.frontLeftEnc.getVoltage()
+//            if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
+//                encoderPosition = (int)(robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.frontRightEnc.getVoltage()
+//            if(servo == RRBotHardware.SERVOS.REAR_LEFT)
+//                encoderPosition = (int)(robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearLeftEnc.getVoltage()
+//            if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
+//                encoderPosition = (int)(robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE); // swap fauxEncVal for robot.rearRightEnc.getVoltage()
+//
+//            if(encoderPosition >= 355)
+//                encoderPosition = 0;
+//
+//            // Calculate error
+//            int error = reference - encoderPosition;
+//
+//            // Calculate Rate of Change of the error
+//            double derivative = (error - lastError) / pidTimer.seconds();
+//
+//            // Calculate Sum of All error over time
+//            integralSum = integralSum + (error * pidTimer.seconds());
+//
+//            // Set servo power
+//            double out = (pidCoef.p * error) + (pidCoef.i * integralSum) + (pidCoef.d * derivative);
+//
+//            /**  Note to self: this loop will most likely have to be changed to account for the different values of the individual swerve modules*/
+//
+//            if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
+//                robot.frontLeftTurn.setPower(out);
+//            if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
+//                robot.frontRightTurn.setPower(out);
+//            if(servo == RRBotHardware.SERVOS.REAR_LEFT)
+//                robot.rearLeftTurn.setPower(out);
+//            if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
+//                robot.rearRightTurn.setPower(out);
+//
+//            lastError = error;
+//
+//            if(lastError <= 15)
+//                hasNotReached = false;
+//        }
+//        if(servo == RRBotHardware.SERVOS.FRONT_LEFT)
+//            robot.frontLeftTurn.setPower(0);
+//        if(servo == RRBotHardware.SERVOS.FRONT_RIGHT)
+//            robot.frontRightTurn.setPower(0);
+//        if(servo == RRBotHardware.SERVOS.REAR_LEFT)
+//            robot.rearLeftTurn.setPower(0);
+//        if(servo == RRBotHardware.SERVOS.REAR_RIGHT)
+//            robot.rearRightTurn.setPower(0);
     }
 
     /**

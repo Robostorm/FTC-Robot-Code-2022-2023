@@ -24,10 +24,10 @@ public class RRBotHardware
     public DcMotor frontRightDrive = null;
     public DcMotor rearLeftDrive = null;
     public DcMotor rearRightDrive = null;
-    public CRServo frontLeftTurn = null;
-    public CRServo frontRightTurn = null;
-    public CRServo rearLeftTurn = null;
-    public CRServo rearRightTurn = null;
+    public Servo frontLeftTurn = null;
+    public Servo frontRightTurn = null;
+    public Servo rearLeftTurn = null;
+    public Servo rearRightTurn = null;
     public AnalogInput frontLeftEnc = null;
     public AnalogInput frontRightEnc = null;
     public AnalogInput rearLeftEnc = null;
@@ -90,21 +90,21 @@ public class RRBotHardware
         rearRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Define and Initialize Servos
-        frontLeftTurn = hwMap.get(CRServo.class, "front_left_turn");
-        frontRightTurn = hwMap.get(CRServo.class, "front_right_turn");
-        rearLeftTurn = hwMap.get(CRServo.class, "rear_left_turn");
-        rearRightTurn = hwMap.get(CRServo.class, "rear_right_turn");
+        frontLeftTurn = hwMap.get(Servo.class, "front_left_turn");
+        frontRightTurn = hwMap.get(Servo.class, "front_right_turn");
+        rearLeftTurn = hwMap.get(Servo.class, "rear_left_turn");
+        rearRightTurn = hwMap.get(Servo.class, "rear_right_turn");
 
-        frontLeftTurn.setDirection(CRServo.Direction.REVERSE);
-        frontRightTurn.setDirection(CRServo.Direction.REVERSE);
-        rearRightTurn.setDirection(CRServo.Direction.REVERSE);
-        rearLeftTurn.setDirection(CRServo.Direction.REVERSE);
+        frontLeftTurn.setDirection(Servo.Direction.REVERSE);
+        frontRightTurn.setDirection(Servo.Direction.REVERSE);
+        rearRightTurn.setDirection(Servo.Direction.REVERSE);
+        rearLeftTurn.setDirection(Servo.Direction.REVERSE);
 
         // Set servo power on init
-        frontLeftTurn.setPower(0);
-        frontRightTurn.setPower(0);
-        rearLeftTurn.setPower(0);
-        rearRightTurn.setPower(0);
+        frontLeftTurn.setPosition(0);
+        frontRightTurn.setPosition(0);
+        rearLeftTurn.setPosition(0);
+        rearRightTurn.setPosition(0);
 
         frontLeftEnc = hwMap.get(AnalogInput.class, "front_left_enc");
         frontRightEnc = hwMap.get(AnalogInput.class, "front_right_enc");
