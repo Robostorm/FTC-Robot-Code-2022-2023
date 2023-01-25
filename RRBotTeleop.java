@@ -10,11 +10,10 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="Swerve Drive", group="Iterative Opmode")
-
 public class RRBotTeleop extends OpMode {
     // Declare OpMode members.
     RRBotHardware robot = new RRBotHardware();
-    RRBotSwerveDrive swerve = new RRBotSwerveDrive(robot);
+    RRBotBasicSwerve drive = new RRBotBasicSwerve(robot);
     private ElapsedTime runtime = new ElapsedTime();
 
     int armPosition = 0;
@@ -58,8 +57,7 @@ public class RRBotTeleop extends OpMode {
 
         ArmUpdate();
 
-        // Show the elapsed game time and wheel power.
-        telemetry.update();
+        telemetry();
     }
 
     /*
@@ -74,34 +72,7 @@ public class RRBotTeleop extends OpMode {
      * Updates the drive system with manual and automatic movements.
      */
     public void DriveUpdate(){
-
-        telemetry.addData("Gamepad(Left)", "X: (%.2f), Y: (%.2f)", gamepad1.left_stick_x, gamepad1.left_stick_y);
-        telemetry.addData("Gamepad(Right)", "X: (%.2f), Y: (%.2f)", gamepad1.right_stick_x, gamepad1.right_stick_y);
-        telemetry.addData("Encoder", "FL: (%.2f) FR: (%.2f) RL: (%.2f) RR: (%.2f)", robot.frontLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE, robot.frontRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE, robot.rearRightEnc.getVoltage() * robot.ENCODER_TO_ANGLE, robot.rearLeftEnc.getVoltage() * robot.ENCODER_TO_ANGLE);
-        telemetry.addData("Last Error", swerve.getLastError());
-        telemetry.addData("Goal Encoder", swerve.getReference());
-        telemetry.addData("Has Reached?", !swerve.getHasNotReached());
-        telemetry.addData("PID Encoder Position", swerve.getEncoderPosition());
-        /*if(!drive.getIsAutoMove()) {
-            drive.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, -gamepad1.right_stick_y, true);
-        } else{
-            drive.AutoMoveEndCheck();
-        }*/
-        if(!swerve.getIsAutoMove()){
-            if(gamepad1.left_stick_x > 0.1f && -gamepad1.left_stick_y > 0.1f)
-            {
-                swerve.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-                telemetry.addData("Update", "Passed Motor Power Check");
-                swerve.setServoAngle(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-                telemetry.addData("Update", "Passed Servo Angle Check");
-            }
-//            if(gamepad1.right_stick_x > 0.1f && -gamepad1.right_stick_y > 0.1f){
-//                swerve.TurnFacing(gamepad1.right_stick_x, -gamepad1.right_stick_y);
-//                telemetry.addData("Update", "Passed Turn Facing Check");
-//            }
-        }else{
-            swerve.AutoMoveEndCheck();
-        }
+        drive.swerve(gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_stick_y);
     }
 
     /**
@@ -152,5 +123,11 @@ public class RRBotTeleop extends OpMode {
                 isClawOpen = true;
             }
         }
+    }
+
+    public void telemetry() {
+        telemetry.addData("Runtime", runtime.toString());
+        telemetry.addData("Turn Speed", drive.turnSpeed);
+        telemetry.update();
     }
 }
