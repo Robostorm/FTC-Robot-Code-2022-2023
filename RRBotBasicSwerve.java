@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 /**
  * Controls the robot's swerve drive base
  * @author John Brereton
- * @since 2022-01-22
+ * @since 2023-01-22
  */
 
 public class RRBotBasicSwerve {
@@ -21,11 +21,17 @@ public class RRBotBasicSwerve {
     boolean activeTurn = false;
 
     public void swerve(double leftX, double rightX, double rightY) {
-        driveAngle = Math.atan2(rightY, rightX)/Math.PI;
-        driveSpeed = Math.sqrt(Math.pow(rightX, 2) + Math.pow(rightY, 2));
+
+        if (rightY < 0) {
+            driveAngle = Math.atan2(rightY, rightX)/Math.PI + 1;
+            driveSpeed = Math.sqrt(Math.pow(rightX, 2) + Math.pow(rightY, 2));
+        } else {
+            driveAngle = Math.atan2(rightY, rightX)/Math.PI;
+            driveSpeed = -Math.sqrt(Math.pow(rightX, 2) + Math.pow(rightY, 2));
+        }
         turnSpeed = leftX;
 
-        if (!activeTurn && driveSpeed >= 0.1){
+        if (!activeTurn && driveSpeed >= 0.1 || driveSpeed <= -0.1){
             robot.frontLeftTurn.setPosition(driveAngle);
             robot.frontRightTurn.setPosition(driveAngle);
             robot.rearLeftTurn.setPosition(driveAngle);
@@ -36,10 +42,10 @@ public class RRBotBasicSwerve {
             robot.rearLeftDrive.setPower(driveSpeed);
             robot.rearRightDrive.setPower(driveSpeed);
         } else if (leftX >= 0.1 || leftX <= -0.1) {
-            robot.frontLeftTurn.setPosition(0.25);
-            robot.frontRightTurn.setPosition(0.75);
-            robot.rearLeftTurn.setPosition(0.75);
-            robot.rearRightTurn.setPosition(0.25);
+            robot.frontLeftTurn.setPosition(0.75);
+            robot.frontRightTurn.setPosition(0.25);
+            robot.rearLeftTurn.setPosition(0.25);
+            robot.rearRightTurn.setPosition(0.75);
 
             robot.frontLeftDrive.setPower(-turnSpeed);
             robot.frontRightDrive.setPower(turnSpeed);

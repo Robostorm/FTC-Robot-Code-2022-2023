@@ -9,6 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+/**
+ * Controls the robot's swerve drive base
+ * @author John Brereton
+ * @since 2023-01-24
+ */
+
 @TeleOp(name="Swerve Drive", group="Iterative Opmode")
 public class RRBotTeleop extends OpMode {
     // Declare OpMode members.
@@ -128,6 +134,13 @@ public class RRBotTeleop extends OpMode {
     public void telemetry() {
         telemetry.addData("Runtime", runtime.toString());
         telemetry.addData("Turn Speed", drive.turnSpeed);
+        telemetry.addData("Drive Angle", drive.driveAngle);
+        telemetry.addData("Right y val", gamepad1.right_stick_y);
+        if (gamepad1.right_stick_y > 0) {
+            telemetry.addData("Right y", "rightY >= 0");
+        } else {
+            telemetry.addData("Right y", "No");
+        }
         telemetry.update();
     }
 }
