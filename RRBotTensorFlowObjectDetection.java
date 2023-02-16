@@ -31,7 +31,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -58,7 +59,7 @@ import java.util.List;
  * @since 2022-10-06
  */
 
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@Autonomous(name = "RRBot TensorFlow Object Detection", group = "Auton")
 public class RRBotTensorFlowObjectDetection extends LinearOpMode {
 
     /*
@@ -70,6 +71,13 @@ public class RRBotTensorFlowObjectDetection extends LinearOpMode {
      */
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/RRBotTeamModel.tflite";
+
+    private static final double inchesPerEncoderTick = 0.2691447979;
+
+    // Declare OpMode members.
+    RRBotHardware robot = new RRBotHardware();
+    RRBotBasicSwerve drive = new RRBotBasicSwerve(robot);
+    private ElapsedTime runtime = new ElapsedTime();
 
     private static final String[] LABELS = {
       "1 Bolt",
@@ -139,6 +147,7 @@ public class RRBotTensorFlowObjectDetection extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
+            robot.frontLeftDrive.setTargetPosition(0);
             while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -164,13 +173,23 @@ public class RRBotTensorFlowObjectDetection extends LinearOpMode {
                             if(recognition.getLabel() == SLEEVE_LABELS[0])
                             {
                                 telemetry.addData("Sleeve Side: ", "[\u2b1b]");
+                                if(robot.frontLeftDrive.getCurrentPosition() < 15 * inchesPerEncoderTick)
+                                    drive.swerve(0.0, 0.0, 0.5);
+                                else if(robot.frontLeftDrive.getCurrentPosition() < 30 * inchesPerEncoderTick)
+                                    drive.swerve(0.0, 0.5, 0.0);)
                             }
                             else if(recognition.getLabel() == SLEEVE_LABELS[1]){
                                 telemetry.addData("Sleeve Side: ", "[\u2b1c]");
+                                if(robot.frontLeftDrive.getCurrentPosition() < 15 * inchesPerEncoderTick)
+                                    drive.swerve(0.0, 0.0, 0.5);
                             }
                             else if(recognition.getLabel() == SLEEVE_LABELS[2])
                             {
                                 telemetry.addData("Sleeve Side: ", "[\u1f301]");
+                                if(robot.frontLeftDrive.getCurrentPosition() < 15 * inchesPerEncoderTick)
+                                    drive.swerve(0.0, 0.0, 0.5);
+                                else if(robot.frontLeftDrive.getCurrentPosition() < 30 * inchesPerEncoderTick)
+                                    drive.swerve(0.0, -0.5, 0.0);)
                             }
                         }
                         telemetry.update();
