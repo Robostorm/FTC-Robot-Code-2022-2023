@@ -72,7 +72,6 @@ public class RRBotTensorFlowObjectDetection extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/RRBotTeamModel.tflite";
 
-    private static final double inchesPerEncoderTick = 0.2691447979;
 
     // Declare OpMode members.
     RRBotHardware robot = new RRBotHardware();
@@ -173,23 +172,23 @@ public class RRBotTensorFlowObjectDetection extends LinearOpMode {
                             if(recognition.getLabel() == SLEEVE_LABELS[0])
                             {
                                 telemetry.addData("Sleeve Side: ", "[\u2b1b]");
-                                if(robot.frontLeftDrive.getCurrentPosition() < 15 * inchesPerEncoderTick)
-                                    drive.swerve(0.0, 0.0, 0.5);
-                                else if(robot.frontLeftDrive.getCurrentPosition() < 30 * inchesPerEncoderTick)
-                                    drive.swerve(0.0, 0.5, 0.0);)
+//                                if(robot.frontLeftDrive.getCurrentPosition() < (int) (15 * kInchesPerEncoderTick))
+//                                    drive.swerve(0.0, 0.0, 0.5);
+//                                else if(robot.frontLeftDrive.getCurrentPosition() < (int) (30 * kInchesPerEncoderTick))
+//                                    drive.swerve(0.0, 0.5, 0.0);
                             }
                             else if(recognition.getLabel() == SLEEVE_LABELS[1]){
                                 telemetry.addData("Sleeve Side: ", "[\u2b1c]");
-                                if(robot.frontLeftDrive.getCurrentPosition() < 15 * inchesPerEncoderTick)
-                                    drive.swerve(0.0, 0.0, 0.5);
+//                                if(robot.frontLeftDrive.getCurrentPosition() < (int) (15 * kInchesPerEncoderTick))
+//                                    drive.swerve(0.0, 0.0, 0.5);
                             }
                             else if(recognition.getLabel() == SLEEVE_LABELS[2])
                             {
                                 telemetry.addData("Sleeve Side: ", "[\u1f301]");
-                                if(robot.frontLeftDrive.getCurrentPosition() < 15 * inchesPerEncoderTick)
-                                    drive.swerve(0.0, 0.0, 0.5);
-                                else if(robot.frontLeftDrive.getCurrentPosition() < 30 * inchesPerEncoderTick)
-                                    drive.swerve(0.0, -0.5, 0.0);)
+//                                if(robot.frontLeftDrive.getCurrentPosition() < (int) (15 * kInchesPerEncoderTick))
+//                                    drive.swerve(0.0, 0.0, 0.5);
+//                                else if(robot.frontLeftDrive.getCurrentPosition() < (int) (430 * kInchesPerEncoderTick))
+//                                    drive.swerve(0.0, -0.5, 0.0);
                             }
                         }
                         telemetry.update();
