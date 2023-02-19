@@ -47,8 +47,8 @@ public class RRBotBasicSwerve {
             robot.rearLeftTurn.setPosition(0.25);
             robot.rearRightTurn.setPosition(0.75);
 
-            robot.frontLeftDrive.setPower(-turnSpeed);
-            robot.frontRightDrive.setPower(turnSpeed);
+            robot.frontLeftDrive.setPower(turnSpeed);
+            robot.frontRightDrive.setPower(-turnSpeed);
             robot.rearLeftDrive.setPower(turnSpeed);
             robot.rearRightDrive.setPower(-turnSpeed);
 

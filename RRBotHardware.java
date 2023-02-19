@@ -55,9 +55,9 @@ public class RRBotHardware
         armMotor = hwMap.get(DcMotor.class, "arm_motor");
 
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         rearLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rearRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        rearRightDrive.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set motor power on init
