@@ -103,7 +103,7 @@ public class RRBotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        drive.swerveInches(10, 0);
+        drive.swerveInches(10, 0.5);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

@@ -25,7 +25,7 @@ public class RRBotBasicSwerve {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;re
+    static final double     DRIVE_SPEED             = 0.6;
 
     public void swerve(double leftX, double rightX, double rightY) {
 
@@ -37,6 +37,9 @@ public class RRBotBasicSwerve {
             driveSpeed = -Math.sqrt(Math.pow(rightX, 2) + Math.pow(rightY, 2));
         }
         turnSpeed = leftX;
+
+        // Limit drive speed to 0.5
+        driveSpeed /= 2.0;
 
         if (!activeTurn && driveSpeed >= 0.1 || driveSpeed <= -0.1){
             robot.frontLeftTurn.setPosition(driveAngle);
@@ -75,7 +78,7 @@ public class RRBotBasicSwerve {
         }
     }
 
-    public void swerveInches(int inches, int angle)
+    public void swerveInches(int inches, double angle)
     {
         robot.frontLeftTurn.setPosition(angle);
         robot.frontRightTurn.setPosition(angle);
