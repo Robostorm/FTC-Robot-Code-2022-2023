@@ -20,8 +20,8 @@ public class RRBotBasicSwerve {
     double turnSpeed;
     boolean activeTurn = false;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 7;
-    static final double     DRIVE_GEAR_REDUCTION    = 6.67/1.0 ;
+    static final double     COUNTS_PER_MOTOR_REV    = 50;
+    static final double     DRIVE_GEAR_REDUCTION    = 6.67 ;
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -40,8 +40,9 @@ public class RRBotBasicSwerve {
 
         // Limit drive speed to 0.5
         driveSpeed /= 2.0;
+        turnSpeed /= 2.0;
 
-        if (!activeTurn && driveSpeed >= 0.1 || driveSpeed <= -0.1){
+        if (!activeTurn && driveSpeed >= 0.025 || driveSpeed <= -0.025){
             robot.frontLeftTurn.setPosition(driveAngle);
             robot.frontRightTurn.setPosition(driveAngle);
             robot.rearLeftTurn.setPosition(driveAngle);
@@ -93,6 +94,10 @@ public class RRBotBasicSwerve {
             robot.rearLeftDrive.setPower(DRIVE_SPEED);
             robot.rearRightDrive.setPower(DRIVE_SPEED);
         }
+        robot.frontLeftDrive.setPower(0);
+        robot.frontRightDrive.setPower(0);
+        robot.rearLeftDrive.setPower(0);
+        robot.rearRightDrive.setPower(0);
 
     }
 }

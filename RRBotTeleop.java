@@ -22,6 +22,8 @@ public class RRBotTeleop extends OpMode {
     RRBotBasicSwerve drive = new RRBotBasicSwerve(robot);
     private ElapsedTime runtime = new ElapsedTime();
 
+    boolean prevClawOpen;
+
     int armPosition = 0;
     double lastArmMove = (double) runtime.time();
     boolean isClawOpen = false;
@@ -118,16 +120,20 @@ public class RRBotTeleop extends OpMode {
             robot.armMotor.setTargetPosition(3300);
         }
 
-        if(gamepad1.a)
+        if(gamepad1.a && !prevClawOpen)
         {
             if(isClawOpen)
             {
                 robot.clawServo.setPosition(1);
                 isClawOpen = false;
             }else{
-                robot.clawServo.setPosition(0);
+                robot.clawServo.setPosition(0.4);
                 isClawOpen = true;
             }
+            prevClawOpen = true;
+        }
+        if (!gamepad1.a) {
+            prevClawOpen = false;
         }
     }
 
